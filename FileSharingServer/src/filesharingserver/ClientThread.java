@@ -167,7 +167,7 @@ public class ClientThread extends Thread {
                 }
             }
         }
-        catch (IOException ex) {
+        catch (Exception ex) {
             System.out.println (id + ": CONNECTION CLOSED");
         }
         
