@@ -136,7 +136,7 @@ public class ClientThread extends Thread {
                                     
                                     //Kirim port file ke penerima (OPEN [id penerima] [filename] [port])
                                     for (ClientThread ct : recipientList) {
-                                        ct.sendMessage ("OPEN " + id + " " + filename + " " + sfs.getPort() + "\r\n");
+                                        ct.sendMessage ("OPEN " + id + " \"" + filename + "\" " + sfs.getPort() + "\r\n");
                                     }
                                     
                                     //Sekarang harusnya pengirim dan penerima bikin koneksi ke port yang dikirim
