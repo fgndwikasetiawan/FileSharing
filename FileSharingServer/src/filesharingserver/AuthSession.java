@@ -56,7 +56,7 @@ public class AuthSession extends Thread {
                         }
                     }
                     catch (Exception ex) {
-                        writer.write ("204 BAD COMMAND\r\n");
+                        writer.write ("203 BAD COMMAND\r\n");
                         writer.flush ();
                         socket.close ();
                     }
@@ -93,7 +93,7 @@ public class AuthSession extends Thread {
                     break;
                     
                 default:
-                    writer.write ("204 BAD COMMAND\r\n");
+                    writer.write ("203 BAD COMMAND\r\n");
                     writer.flush ();
                     socket.close ();
                     break;

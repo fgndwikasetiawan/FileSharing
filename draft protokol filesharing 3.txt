@@ -1,0 +1,89 @@
+-----------------------------
+ CLIENT COMMANDS
+-----------------------------
+SEND [filename] [filesize] [jumlah recipient]
+LIST
+OPEN [id] [filename] [port] 
+-----------------------------
+ SERVER COMMAND
+-----------------------------
+RCFR [id]
+-----------------------------
+ SHAREDFILESERVER COMMANDS
+-----------------------------
+WRITE [id] [key]
+READ [id] [key] [offset]
+
+----------------------------------------------------------------------------------------
+
+-----------------------------
+ AUTH RESPONSES
+-----------------------------
+200 AUTHENTICATION OK
+201 ID HAS BEEN TAKEN
+202 AUTHENTICATION FAILED
+#203 BAD COMMAND (masukin user aja, tanpa masukin key)
+-----------------------------
+ LIST RESPONSE
+-----------------------------
+300 [jumlah user]
+[user1]
+[user2]
+[userN]
+-----------------------------
+ RCFR/SEND RESPONSES
+-----------------------------
+(RCFR) 400 OK
+(RCFR) 401 DENIED
+402 [jumlah recipient]
+[recipient1]
+[recipient2]
+[recipientN]
+[port]
+403 NO RECIPIENT
+404 SERVER ERROR
+405 BAD SEND COMMAND
+-----------------------------
+ SHAREDFILESERVER RESPONSES
+-----------------------------
+500 "[nama file]"
+501 DENIED
+
+-------------------------------------------------------------------------------------------------
+(client membuka koneksi command)
+S: WELCOME
+C: [user] [pass]
+S: (200 AUTHENTICATION OK) (201 ID HAS BEEN TAKEN) (203 BAD COMMAND)
+(client membuka koneksi notif)
+S: WELCOME
+C: [user] [pass]
+S: (200 AUTHENTICATION OK) (202 AUTHENTICATION FAILED) (203 BAD COMMAND)
+
+(client ingin mengirim data)
+C: SEND [filename] [filesize] [jumlah] 
+   [siapa]
+   [siapalagi]
+
+(server ngirim pesan notifikasi ke client-client yang dituju)
+S: RCFR [id pengirim]	
+C: (400 OK)
+C: (401 DENIED)
+(kalau ok client nge-queue nama file yang mau didownload)
+(kalau ada yang mau nerima, server bikin satu file baru dengan nama storedfilename (id+timestamp) terus bikin
+satu objek SharedFile dengan parameter2 yang sesuai)
+
+S: ( 402 [jumlah yg nerima]
+    [siapa]
+    [siapalagi]
+    [port]
+   )
+   (403 NO RECIPIENT)
+   (404 SERVER ERROR)
+   (405 BAD SEND COMMAND)
+
+(server ngirim notif ke recipient)
+S: OPEN [id] [filename] [port data] 
+(kalau klien nerima pesan di atas pada koneksi notif-nya, dia buat koneksi baru ke server pada port di atas)
+
+C: (WRITE [id] [key]) (READ [id] [key] [offset]) *offset: mulai baca file dari mana, berguna kalo DC
+S: (600 OK) (601 DENIED)
