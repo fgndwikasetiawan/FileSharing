@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -143,8 +144,9 @@ public class SharedFileServer extends Thread {
         @Override
         public void run () {
             long written = 0;
+            FileOutputStream fos = null;
             try {
-                FileOutputStream fos = new FileOutputStream (filename);
+                fos = new FileOutputStream (filename);
                 InputStream in = socket.getInputStream ();
                 int bytesRead;
                 byte[] buffer = new byte[1024];
@@ -155,6 +157,11 @@ public class SharedFileServer extends Thread {
                 }
             }
             catch (Exception ex) {
+                try {
+                    if (fos != null) fos.close();
+                } catch (IOException ex1) {
+                    Logger.getLogger(SharedFileServer.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
             filesize = written;
         }
@@ -197,6 +204,8 @@ public class SharedFileServer extends Thread {
                         offset += bytesRead;
                     }
                 }
+                
+                fis.close ();
                 socket.close();
                 recipients.remove (recId);
                 //kalau semua recipient udah selesai download
